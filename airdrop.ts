@@ -1,9 +1,25 @@
 import { Engine } from "@thirdweb-dev/engine";
 import type { Address } from "thirdweb";
 
+// Joe said hardcode so lets hardcode it
+const data = [
+  {
+    toAddress: "0x7ADf64112b451Bb510a38d9D18063e9D0F42dF56",
+    amount: "1000000000000000000"
+  },
+  {
+    toAddress: "0xD5D144c27673B434D734edE9DfA3624e0aE37d80",
+    amount: "1000000000000000000"
+  },
+  {
+    toAddress: "0xbbc9b6b9735A24EC398f386F67F5e7eE6aD71b25",
+    amount: "1000000000000000000"
+  }
+];
+
 const engine = new Engine({
   url: "https://solutions-demo.engine-usw2.thirdweb.com",
-  accessToken: "ACCESS_TOKEN",
+  accessToken: "ENGINE_ACCESS_TOKEN",
 });
 
 const CONTRACT_ADDRESS = "0x9Ce6B8256a6df56F104018a8988f52BB094e91DF";
@@ -12,25 +28,14 @@ const BACKEND_WALLET_ADDRESS = "0xEA539E14a34d3aD3C2B788920bcBd803aa52B6dD";
 
 // Define the type for a receiver
 type Receiver = {
-    toAddress: Address;
-    amount: string;
+  toAddress: Address;
+  amount: string;
 };
 
-// Define your list of addresses here
-const addresses: Address[] = [
-    "0x71B6267b5b2b0B64EE058C3D27D58e4E14e7327f",
-    "0xA1B2C3D4E5F67890123456789012345678901234",
-    "0x5A9e17c8d6D7020C7E0b1b46A7B9fE50d6C3E5E2",
-    "0x8B1D64f5c3F02b4C4D0eD4C15C6A3bF65F6aD9E3",
-    "0x1F6eC7b3D8E3eB1D9F1F8F3eD7F2E8A0B2C3D4E5",
-    "0x9E4A1b2D8F5C9e1D6A1C2B3D4E5F6A7B8C9D0E1",
-    "0x4F7E1D6C2A9B3E0D8F6C5A4E3B2D1F8C9A0E1B2"
-  ];
-
-// Create a list of receivers using the addresses
-const receivers: Receiver[] = addresses.map((address) => ({
-  toAddress: address,
-  amount: "1000000000000000000", // Adjust amount as needed
+// Use the hardcoded data
+const receivers: Receiver[] = data.map((entry) => ({
+  toAddress: entry.toAddress as Address,
+  amount: entry.amount,
 }));
 
 // Chunk receivers into batches of 250
@@ -41,46 +46,65 @@ while (receivers.length) {
 
 let numberMined = 0;
 
-// For each chunk, mint the batch
+// for each chunk, mint the batch
 chunks.forEach(async (chunk, i) => {
-  // Wait a random amount of time between 0 and 2 seconds to avoid synchronizing requests and overloading the engine
+  console.log(`Processing chunk ${i + 1}/${chunks.length} with ${chunk.length} receivers`);
+
+  // Log the data being sent
+  console.log("Sending data:", {
+    chainId: CHAIN_ID,
+    contractAddress: CONTRACT_ADDRESS,
+    backendWalletAddress: BACKEND_WALLET_ADDRESS,
+    data: chunk
+  });
+
+  // wait a random amount of time between 0 and 2 seconds to avoid synchronising requests and overloading the engine. Crashed Engine too many times here
   await randomStagger();
 
-  const res = await engine.erc20.mintBatchTo(
-    CHAIN_ID,
-    CONTRACT_ADDRESS,
-    BACKEND_WALLET_ADDRESS,
-    {
-      data: chunk,
-    },
-  );
+  try {
+    const res = await engine.erc20.mintBatchTo(
+      CHAIN_ID,
+      CONTRACT_ADDRESS,
+      BACKEND_WALLET_ADDRESS,
+      {
+        data: chunk,
+      },
+    );
 
-  const queueId = res.result.queueId;
-  console.log("Batch queued, queue ID: ", queueId, "... now waiting to mine");
-  await pollToMine(queueId);
+    const queueId = res.result.queueId;
+    console.log("Batch queued, queue ID: ", queueId, "... now waiting to mine");
+    await pollToMine(queueId);
+  } catch (error) {
+    console.error("Error minting batch:", error);
+  }
 });
 
 async function pollToMine(queueId: string) {
   let mined = false;
   while (!mined) {
-    const status = await engine.transaction.status(queueId);
+    try {
+      const status = await engine.transaction.status(queueId);
 
-    if (status.result.status === "mined") {
-      mined = true;
-      console.log("Transaction mined! 🎉", queueId);
-      console.log(`Mined batches ${++numberMined}/${chunks.length}`);
-    } else if (status.result.status === "error") {
-      console.error("Transaction failed", queueId);
-      console.error(status.result.errorMessage);
-      return;
+      if (status.result.status === "mined") {
+        mined = true;
+        console.log("Transaction mined! 🎉", queueId);
+        console.log(`Mined batches ${++numberMined}/${chunks.length}`);
+      } else if (status.result.status === "error") {
+        console.error("Transaction failed", queueId);
+        console.error(status.result.errorMessage);
+        return;
+      }
+    } catch (error) {
+      console.error("Error checking transaction status:", error);
     }
-    // Wait a random amount of time between 0 and 2 seconds to avoid synchronizing requests and overloading the engine
+
+    // wait a random amount of time between 0 and 2 seconds to avoid synchronising requests and overloading the engine
     await randomStagger();
   }
 }
 
 async function randomStagger() {
-  return new Promise((resolve) =>
+  return await new Promise((resolve) =>
     setTimeout(resolve, Math.random() * 2000),
   );
 }
