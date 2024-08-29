@@ -18,7 +18,7 @@ const data = [
 ];
 
 const engine = new Engine({
-  url: "https://solutions-demo.engine-usw2.thirdweb.com",
+  url: "ENGINE_URL",
   accessToken: "ENGINE_ACCESS_TOKEN",
 });
 
