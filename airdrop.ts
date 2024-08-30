@@ -1,7 +1,7 @@
 import { Engine } from "@thirdweb-dev/engine";
 import type { Address } from "thirdweb";
 
-// Joe said hardcode so lets hardcode it
+// Here you should pull data in from a json, but for this example we are hardcoding the addresses and ammounts
 const data = [
   {
     toAddress: "0x7ADf64112b451Bb510a38d9D18063e9D0F42dF56",
@@ -10,21 +10,17 @@ const data = [
   {
     toAddress: "0xD5D144c27673B434D734edE9DfA3624e0aE37d80",
     amount: "1000000000000000000"
-  },
-  {
-    toAddress: "0xbbc9b6b9735A24EC398f386F67F5e7eE6aD71b25",
-    amount: "1000000000000000000"
   }
 ];
 
 const engine = new Engine({
-  url: "ENGINE_URL",
+  url: "YOUR_ENGINE_URL",
   accessToken: "ENGINE_ACCESS_TOKEN",
 });
 
-const CONTRACT_ADDRESS = "0x9Ce6B8256a6df56F104018a8988f52BB094e91DF";
-const CHAIN_ID = "84532";
-const BACKEND_WALLET_ADDRESS = "0xEA539E14a34d3aD3C2B788920bcBd803aa52B6dD";
+const CONTRACT_ADDRESS = "TOKEN_CONTRACT";
+const CHAIN_ID = "CHAIN_ID";
+const BACKEND_WALLET_ADDRESS = "BACKEND_WALLET";
 
 // Define the type for a receiver
 type Receiver = {
@@ -32,13 +28,13 @@ type Receiver = {
   amount: string;
 };
 
-// Use the hardcoded data
+// Use the hardcoded data, for 25k, json is probably the better option here
 const receivers: Receiver[] = data.map((entry) => ({
   toAddress: entry.toAddress as Address,
   amount: entry.amount,
 }));
 
-// Chunk receivers into batches of 250
+// Chunk receivers into batches of 250, this is useful for 25k addresses, even though in this example we wont really use it
 const chunks: Receiver[][] = [];
 while (receivers.length) {
   chunks.push(receivers.splice(0, 250));
