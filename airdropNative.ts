@@ -19,11 +19,11 @@ const data = [
 ];
 
 const CHAIN_ID = "84532";
-const BACKEND_WALLET_ADDRESS = "0xEA539E14a34d3aD3C2B788920bcBd803aa52B6dD";
+const BACKEND_WALLET_ADDRESS = "0x...";
 
 // Initialize the Engine
 const engine = new Engine({
-  url: "https://solutions-demo.engine-usw2.thirdweb.com",
+  url: "ENGINE_URL",
   accessToken: process.env.ACCESS_TOKEN as string,
 });
 
