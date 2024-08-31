@@ -20,7 +20,7 @@ const data = [
 ];
 
 const CHAIN_ID = "84532";
-const BACKEND_WALLET_ADDRESS = "0xEA539E14a34d3aD3C2B788920bcBd803aa52B6dD";
+const BACKEND_WALLET_ADDRESS = "0x...";
 
 // Transform the hardcoded data into the new request format
 const receivers = data.map((entry) => ({
@@ -38,7 +38,7 @@ const receivers = data.map((entry) => ({
 async function sendTransactionBatch() {
   try {
     const response = await axios.post(
-      `https://solutions-demo.engine-usw2.thirdweb.com/backend-wallet/${CHAIN_ID}/send-transaction-batch`,
+      `ENGINE_URL/${CHAIN_ID}/send-transaction-batch`,
       receivers, // Pass the receivers array as the body
       {
         headers: {
