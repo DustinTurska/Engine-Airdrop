@@ -4,10 +4,15 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "airdrop": "ts-node airdrop.ts"
+    "airdrop": "ts-node airdrop.ts",
+    "airdropTest": "ts-node airdropTest.ts",
+    "airdropJSON": "ts-node airdropJSON.ts",
+    "airdropNative": "ts-node airdropNative.ts"
   },
   "dependencies": {
     "@thirdweb-dev/engine": "^0.0.12",
+    "axios": "^1.7.6",
+    "dotenv": "^16.4.5",
     "thirdweb": "^5.48.2"
   },
   "devDependencies": {
