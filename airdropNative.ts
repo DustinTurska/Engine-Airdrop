@@ -1,4 +1,4 @@
-import axios from "axios";
+import { Engine } from "@thirdweb-dev/engine";
 import * as dotenv from "dotenv";
 dotenv.config();
 
@@ -22,6 +22,12 @@ const data = [
 const CHAIN_ID = "84532";
 const BACKEND_WALLET_ADDRESS = "0x...";
 
+// Initialize the Engine
+const engine = new Engine({
+  url: "ENGINE_URL",
+  accessToken: process.env.ACCESS_TOKEN as string,
+});
+
 // Transform the hardcoded data into the new request format
 const receivers = data.map((entry) => ({
   toAddress: entry.toAddress,
@@ -37,25 +43,26 @@ const receivers = data.map((entry) => ({
 
 async function sendTransactionBatch() {
   try {
-    const response = await axios.post(
-      `ENGINE_URL/${CHAIN_ID}/send-transaction-batch`,
-      receivers, // Pass the receivers array as the body
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${process.env.ACCESS_TOKEN}`,
-          'x-backend-wallet-address': BACKEND_WALLET_ADDRESS,
+    const res = await engine.backendWallet.sendTransactionBatch(
+      CHAIN_ID,
+      BACKEND_WALLET_ADDRESS,
+      undefined,
+      receivers.map(receiver => ({
+        toAddress: receiver.toAddress,
+        value: receiver.value,
+        data: receiver.data,
+        txOverrides: {
+          gas: receiver.txOverrides.gas,
+          maxFeePerGas: receiver.txOverrides.maxFeePerGas,
+          maxPriorityFeePerGas: receiver.txOverrides.maxPriorityFeePerGas,
+          value: receiver.txOverrides.value,
         },
-      }
+      }))
     );
 
-    console.log("Batch sent, response:", response.data);
-  } catch (error: any) { // Explicitly type error as 'any'
-    if (axios.isAxiosError(error)) {
-      console.error("Error sending batch:", error.response ? error.response.data : error.message);
-    } else {
-      console.error("Unexpected error:", error);
-    }
+    console.log("Batch sent, response:", res);
+  } catch (error) {
+    console.error("Error sending batch:", error);
   }
 }
 
