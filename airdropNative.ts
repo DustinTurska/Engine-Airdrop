@@ -19,11 +19,11 @@ const data = [
 ];
 
 const CHAIN_ID = "84532";
-const BACKEND_WALLET_ADDRESS = "0x...";
+const BACKEND_WALLET_ADDRESS = process.env.BACKEND_WALLET as string;
 
 // Initialize the Engine
 const engine = new Engine({
-  url: "ENGINE_URL",
+  url: process.env.ENGINE_URL as string,
   accessToken: process.env.ACCESS_TOKEN as string,
 });
 

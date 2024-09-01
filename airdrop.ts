@@ -44,13 +44,13 @@ const data = [
 ];
 
 const engine = new Engine({
-  url: "https://solutions-demo.engine-usw2.thirdweb.com",
+  url: process.env.ENGINE_URL as string,
   accessToken: process.env.ACCESS_TOKEN as string,
 });
 
 const CONTRACT_ADDRESS = "0x5A2AF40244F192291f00E7e4950725fE912C549B";
 const CHAIN_ID = "84532";
-const BACKEND_WALLET_ADDRESS = "0xEA539E14a34d3aD3C2B788920bcBd803aa52B6dD";
+const BACKEND_WALLET_ADDRESS = process.env.BACKEND_WALLET as string;
 
 // Define the type for a receiver
 type Receiver = {

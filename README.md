@@ -1,4 +1,8 @@
-# Engine-Airdrop
+# thirdweb Engine Scripts
 
-Airdrop to several thousand addresses in batches via thirdweb Engine
+A repo of scripts for thirdweb Engine
+
+Airdrop ERC20
+
+Airdrop Native Token
 
