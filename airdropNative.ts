@@ -16,9 +16,33 @@ const data = [
     toAddress: "0xbbc9b6b9735A24EC398f386F67F5e7eE6aD71b25",
     amount: "10000000000000000",
   },
+  {
+    toAddress: "0x8307A1F7583016b755e9ea80Acd68CE81B07b70B",
+    amount: "10000000000000000",
+  },
+  {
+    toAddress: "0xEbF505D787CF9518DE9799F3eDE01b230188F251",
+    amount: "10000000000000000",
+  },
+  {
+    toAddress: "0xF4917bce28177aE3E8497199B3Ba0195e485E055",
+    amount: "10000000000000000",
+  },
+  {
+    toAddress: "0x8CACB20637a1b3F3fD1fB605Da3C3ECbC5A3778c",
+    amount: "10000000000000000",
+  },
+  {
+    toAddress: "0x0db0f8E971287F11C44a87D68b8014Df78Fe54E2",
+    amount: "10000000000000000",
+  },
+  {
+    toAddress: "0x829d9E61EFb24636Ec631446859CF5c5D210f919",
+    amount: "10000000000000000",
+  },
 ];
 
-const CHAIN_ID = "84532";
+const CHAIN_ID = "17000";
 const BACKEND_WALLET_ADDRESS = process.env.BACKEND_WALLET as string;
 
 // Initialize the Engine
@@ -62,7 +86,7 @@ async function sendTransactionBatch() {
     console.log(
       "Transactions queued, queue IDs:",
       queueIds,
-      "... waiting on the blockchain..."
+      "... waiting on the blockchain ..."
     );
 
     // Poll for each queue ID
@@ -86,8 +110,8 @@ async function pollToMine(queueId: string) {
         // Extract and log the transaction has
         const transactionHash = status.result.transactionHash;
         // Construct and log the Blockscout Url, make sure to update this based on your chain and explorer of choice
-        const blockscoutUrl = `https://base-sepolia.blockscout.com/tx/${transactionHash}`;
-        console.log("View transaction on Blockscout:", blockscoutUrl);
+        const blockExplorerUrl = `https://holesky.beaconcha.in/tx/${transactionHash}`;
+        console.log("View transaction on the blockexplorer:", blockExplorerUrl);
       } else if (status.result.status === "error") {
         console.error("Airdrop failed", queueId);
         console.error(status.result.errorMessage);
