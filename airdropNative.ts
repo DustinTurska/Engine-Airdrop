@@ -109,7 +109,7 @@ async function pollToMine(queueId: string) {
         console.log("Transaction mined! 🥳 Native has been sent", queueId);
         // Extract and log the transaction has
         const transactionHash = status.result.transactionHash;
-        // Construct and log the Blockscout Url, make sure to update this based on your chain and explorer of choice
+        // Construct and log the Blockexplorer Url, make sure to update this based on your chain and explorer of choice
         const blockExplorerUrl = `https://holesky.beaconcha.in/tx/${transactionHash}`;
         console.log("View transaction on the blockexplorer:", blockExplorerUrl);
       } else if (status.result.status === "error") {
