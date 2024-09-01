@@ -1,6 +1,5 @@
 import { Engine } from "@thirdweb-dev/engine";
 import * as dotenv from "dotenv";
-import { stat } from "fs";
 dotenv.config();
 
 // Hardcoding data here for example but ideally should import from a csv
@@ -63,7 +62,7 @@ async function sendTransactionBatch() {
     console.log(
       "Transactions queued, queue IDs:",
       queueIds,
-      "... waiting on the blockchain"
+      "... waiting on the blockchain..."
     );
 
     // Poll for each queue ID
