@@ -1,8 +1,9 @@
 import { Engine } from "@thirdweb-dev/engine";
 import * as dotenv from "dotenv";
+import { stat } from "fs";
 dotenv.config();
 
-// Should import from csv but here we are hardcoding this
+// Hardcoding data here for example but ideally should import from a csv
 const data = [
   {
     toAddress: "0x7ADf64112b451Bb510a38d9D18063e9D0F42dF56",
@@ -15,7 +16,7 @@ const data = [
   {
     toAddress: "0xbbc9b6b9735A24EC398f386F67F5e7eE6aD71b25",
     amount: "10000000000000000",
-  }
+  },
 ];
 
 const CHAIN_ID = "84532";
@@ -45,7 +46,7 @@ async function sendTransactionBatch() {
       CHAIN_ID,
       BACKEND_WALLET_ADDRESS,
       undefined,
-      receivers.map(receiver => ({
+      receivers.map((receiver) => ({
         toAddress: receiver.toAddress,
         value: receiver.value,
         data: receiver.data,
@@ -58,9 +59,44 @@ async function sendTransactionBatch() {
       }))
     );
 
-    console.log("Batch sent, response:", res);
+    const queueIds: string[] = res.result.queueIds;
+    console.log(
+      "Transactions queued, queue IDs:",
+      queueIds,
+      "... waiting on the blockchain"
+    );
+
+    // Poll for each queue ID
+    for (const queueId of queueIds) {
+      await pollToMine(queueId);
+    }
   } catch (error) {
-    console.error("Error sending batch:", error);
+    console.log("Error transferring Native", error);
+  }
+}
+
+async function pollToMine(queueId: string) {
+  let mined = false;
+  while (!mined) {
+    try {
+      const status = await engine.transaction.status(queueId);
+
+      if (status.result.status === "mined") {
+        mined = true;
+        console.log("Transaction mined! 🥳 Native has been sent", queueId);
+        // Extract and log the transaction has
+        const transactionHash = status.result.transactionHash;
+        // Construct and log the Blockscout Url, make sure to update this based on your chain and explorer of choice
+        const blockscoutUrl = `https://base-sepolia.blockscout.com/tx/${transactionHash}`;
+        console.log("View transaction on Blockscout:", blockscoutUrl);
+      } else if (status.result.status === "error") {
+        console.error("Airdrop failed", queueId);
+        console.error(status.result.errorMessage);
+        return;
+      }
+    } catch (error) {
+      console.error("Error checking transaction status:", error);
+    }
   }
 }
 

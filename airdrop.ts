@@ -3,7 +3,7 @@ import type { Address } from "thirdweb";
 import * as dotenv from "dotenv";
 dotenv.config();
 
-// Joe said hardcode so lets hardcode it
+// Hardcoding data here for example but ideally should import from a csv
 const data = [
   {
     toAddress: "0x7ADf64112b451Bb510a38d9D18063e9D0F42dF56",
@@ -64,7 +64,7 @@ const receivers: Receiver[] = data.map((entry) => ({
   amount: entry.amount,
 }));
 
-// Chunk receivers into batches of 250
+// Chunk receivers into batches of 250 (or what ever you decide, if over a 1000 or more would batch into 250 chunks)
 const chunks: Receiver[][] = [];
 while (receivers.length) {
   chunks.push(receivers.splice(0, 250));
@@ -121,7 +121,7 @@ async function pollToMine(queueId: string) {
         // Extract and log the transactionHash
         const transactionHash = status.result.transactionHash;
 
-        // Construct and log the Blockscout URL
+        // Construct and log the Blockscout URL, make sure to update this based on your chain
         const blockscoutUrl = `https://base-sepolia.blockscout.com/tx/${transactionHash}`;
         console.log("View transaction on Blockscout:", blockscoutUrl);
       } else if (status.result.status === "error") {
