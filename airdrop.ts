@@ -64,7 +64,7 @@ const receivers: Receiver[] = data.map((entry) => ({
   amount: entry.amount,
 }));
 
-// Chunk receivers into batches of 250 (or what ever you decide, if over a 1000 or more would batch into 250 chunks)
+// Chunk receivers into batches of 250
 const chunks: Receiver[][] = [];
 while (receivers.length) {
   chunks.push(receivers.splice(0, 250));
@@ -85,9 +85,6 @@ chunks.forEach(async (chunk, i) => {
     backendWalletAddress: BACKEND_WALLET_ADDRESS,
     data: chunk,
   });
-
-  // wait a random amount of time between 0 and 2 seconds to avoid synchronising requests and overloading the engine. Crashed Engine too many times here
-  await randomStagger();
 
   try {
     const res = await engine.erc20.mintBatchTo(
@@ -132,14 +129,5 @@ async function pollToMine(queueId: string) {
     } catch (error) {
       console.error("Error checking transaction status:", error);
     }
-
-    // Wait a random amount of time between 0 and 2 seconds to avoid synchronising requests and overloading the engine
-    await randomStagger();
   }
-}
-
-async function randomStagger() {
-  return await new Promise((resolve) =>
-    setTimeout(resolve, Math.random() * 2000)
-  );
 }
