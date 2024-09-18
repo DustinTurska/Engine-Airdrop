@@ -7,12 +7,14 @@
     "airdrop": "ts-node airdrop.ts",
     "airdropTest": "ts-node airdropTest.ts",
     "airdropJSON": "ts-node airdropJSON.ts",
-    "airdropNative": "ts-node airdropNative.ts"
+    "airdropNative": "ts-node airdropNative.ts",
+    "claimTo": "ts-node claimTo.ts"
   },
   "dependencies": {
     "@thirdweb-dev/engine": "^0.0.12",
     "axios": "^1.7.6",
     "dotenv": "^16.4.5",
+    "ethers": "^6.13.2",
     "thirdweb": "^5.48.2"
   },
   "devDependencies": {
