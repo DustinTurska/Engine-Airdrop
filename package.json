@@ -8,7 +8,8 @@
     "airdropTest": "ts-node airdropTest.ts",
     "airdropJSON": "ts-node airdropJSON.ts",
     "airdropNative": "ts-node airdropNative.ts",
-    "claimTo": "ts-node claimTo.ts"
+    "claimTo": "ts-node claimTo.ts",
+    "customClaimTo": "ts-node customClaimTo.ts"
   },
   "dependencies": {
     "@thirdweb-dev/engine": "^0.0.12",
