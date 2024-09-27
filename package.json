@@ -10,7 +10,8 @@
     "airdropNative": "ts-node airdropNative.ts",
     "claimTo": "ts-node claimTo.ts",
     "customClaimTo": "ts-node customClaimTo.ts",
-    "erc1155claimTo": "ts-node erc1155claimTo.ts"
+    "erc1155claimTo": "ts-node erc1155claimTo.ts",
+    "erc1155MintTo": "ts-node erc1155MintTo.ts"
   },
   "dependencies": {
     "@thirdweb-dev/engine": "^0.0.12",
