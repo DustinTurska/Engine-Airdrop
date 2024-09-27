@@ -70,6 +70,7 @@ async function pollToMine(queueId: string) {
           "Transaction mined! 🥳 ERC721 token has been claimed",
           queueId
         );
+        // Update this with the blockexplorer for your chain. Here we are using holesky
         const blockExplorerUrl = `https://holesky.beaconcha.in/tx/${transactionHash}`;
         console.log("View transaction on the blockexplorer:", blockExplorerUrl);
 
