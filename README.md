@@ -10,3 +10,6 @@ Airdrop Native currency to a list of addresses
 
 ## [ERC721 Claim To](https://github.com/DustinTurska/thirdweb-Engine-Scripts/blob/main/claimTo.ts)
 Claim an ERC721 token to a set address
+
+## [Batch transactions for Multipl contracts](https://github.com/DustinTurska/thirdweb-Engine-Scripts/blob/main/parallelTransactions.ts)
+Send transactions from different contract types and different chains
