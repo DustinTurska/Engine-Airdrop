@@ -88,32 +88,22 @@ async function claimERC1155() {
 }
 
 async function airdropERC20() {
-  const receivers: { toAddress: Address; amount: string }[] = erc20Data.map((entry) => ({
-    toAddress: entry.toAddress as Address,
-    amount: entry.amount,
-  }));
-
-  const chunks: typeof receivers[] = [];
-  while (receivers.length) {
-    chunks.push(receivers.splice(0, 250));
-  }
-
-  for (let i = 0; i < chunks.length; i++) {
-    const chunk = chunks[i];
-    console.log(`Processing ERC20 chunk ${i + 1}/${chunks.length} with ${chunk.length} receivers`);
-
+  for (const entry of erc20Data) {
     try {
-      const res = await engine.erc20.mintBatchTo(
+      const res = await engine.erc20.mintTo(
         CHAIN_ID_ERC20,
         ERC20_CONTRACT_ADDRESS,
         BACKEND_WALLET_ADDRESS,
-        { data: chunk }
+        {
+          toAddress: entry.toAddress as Address,
+          amount: entry.amount,
+        }
       );
 
-      console.log("ERC20 Batch queued, queue ID:", res.result.queueId);
+      console.log("ERC20 Mint initiated, queue ID:", res.result.queueId);
       await pollToMine(res.result.queueId, "ERC20", CHAIN_ID_ERC20);
     } catch (error) {
-      console.error("Error minting ERC20 batch:", error);
+      console.error("Error minting ERC20:", error);
     }
   }
 }
